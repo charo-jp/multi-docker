@@ -1,0 +1,16 @@
+sudo: requried
+services:
+  - docker
+
+before_install:
+  - docker build -t charowan/react-test -f ./client/Dockerfile.dev ./client
+
+script: 
+  - docker run -e CI=true charowan/react-test npm run test
+
+after_success:
+  - docker build -t charowan/multi-client ./client
+  - docker build -t charowan/multi-nginx ./nginx
+  - docker build -t charowan/multi-server ./server
+  - docker build -t charowan/multi-worker ./worker
+
